@@ -1,0 +1,1291 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Tobaba- Mitra Partner</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css" rel="stylesheet">
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/glideaceh/BusMitra/stylemitra.css">
+    <style>
+        .btn-nominal-opt {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            padding: 12px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 14px;
+            color: var(--text-main);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .btn-nominal-opt:hover, .btn-nominal-opt.active {
+            border-color: #10b981;
+            background: #ecfdf5;
+            color: #059669;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+        }
+        #skemaSelectOptions .custom-option:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        #btnMobileStruk { width: 100% !important; text-align: center; justify-content: center !important}
+
+        /* CUSTOM CSS UNTUK REGION SELECTOR (MODERN & ANIMATED) */
+        .modern-region-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .modern-region-list li {
+            padding: 14px 12px;
+            border-bottom: 1px solid #f1f5f9;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            transform: translateX(15px);
+            animation: slideInFade 0.4s ease forwards;
+        }
+        .modern-region-list li:hover {
+            background: #f8fafc;
+            border-radius: 12px;
+            border-bottom-color: transparent;
+            padding-left: 18px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+        }
+        .modern-region-list li .loc-icon {
+            background: #ecfdf5;
+            color: #10b981;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .modern-region-list li:hover .loc-icon {
+            background: #10b981;
+            color: #fff;
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+        }
+        .modern-region-list li .loc-name {
+            flex: 1;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-main);
+        }
+        .modern-region-list li .loc-arrow {
+            color: #cbd5e1;
+            font-size: 12px;
+            transition: transform 0.3s ease, color 0.3s ease;
+        }
+        .modern-region-list li:hover .loc-arrow {
+            color: #10b981;
+            transform: translateX(4px);
+        }
+        
+        .region-breadcrumb {
+            padding: 12px 20px;
+            background: #f8fafc;
+            font-size: 12px;
+            color: var(--primary);
+            font-weight: 700;
+            border-bottom: 1px solid #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            overflow-x: auto;
+            white-space: nowrap;
+        }
+        .region-breadcrumb::-webkit-scrollbar {
+            display: none;
+        }
+
+        @keyframes slideInFade {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* DESAIN DROPDOWN BANK KEREN & ANIMATED */
+        .bank-dropdown-menu {
+            background: #1e293b;
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            margin-top: 6px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            position: absolute;
+            width: 100%;
+            z-index: 100;
+            max-height: 250px;
+            overflow-y: auto;
+            display: none;
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bank-dropdown-menu.open {
+            display: block !important;
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .bank-dropdown-menu::-webkit-scrollbar {
+            width: 6px;
+        }
+        .bank-dropdown-menu::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+        }
+        .bank-item-option {
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 13px;
+            font-weight: 500;
+        }
+        .bank-item-option:hover {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            padding-left: 20px;
+        }
+
+        /* Tambahan Khusus Dropdown Edit Perusahaan (Light Mode) */
+        .light-bank-list .bank-item-option {
+            color: var(--text-main);
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .light-bank-list .bank-item-option:hover {
+            background: #ecfdf5;
+            color: #10b981;
+        }
+
+       /* DESAIN NOTIFIKASI MELAYANG MODERN BERANIMASI (FLOATING TOAST) */
+        .alert-toast {
+            position: fixed;
+            top: 25px;
+            left: 50%;
+            transform: translateX(-50%) translateY(-100px);
+            opacity: 0;
+            visibility: hidden;
+            background: rgba(15, 23, 42, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            color: #ffffff;
+            padding: 14px 20px;
+            border-radius: 18px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.12);
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 9999999;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            width: fit-content;
+            max-width: 90vw;
+            pointer-events: none;
+        }
+        .alert-toast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .alert-toast .alert-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .alert-toast .alert-icon.success {
+            background: rgba(16, 185, 129, 0.2);
+            color: #34d399;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            box-shadow: 0 0 12px rgba(52, 211, 153, 0.2);
+        }
+        .alert-toast .alert-icon.error {
+            background: rgba(239, 68, 68, 0.2);
+            color: #f87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            box-shadow: 0 0 12px rgba(248, 113, 113, 0.2);
+        }
+        .alert-toast .alert-icon.warning {
+            background: rgba(245, 158, 11, 0.2);
+            color: #fbbf24;
+            border: 1px solid rgba(245, 158, 11, 0.4);
+            box-shadow: 0 0 12px rgba(251, 191, 36, 0.2);
+        }
+        .alert-toast .alert-content h4 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+        .alert-toast .alert-content p {
+            margin: 3px 0 0 0;
+            font-size: 12.5px;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+            line-height: 1.3;
+        }
+
+        /* FLOATING TOAST SALIN REKENING */
+        #floatingCopyToast {
+            position: fixed;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            opacity: 0;
+            visibility: hidden;
+            background: #10b981;
+            color: #ffffff;
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 13px;
+            z-index: 9999999;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        #floatingCopyToast.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+        .btn-salin-rek {
+            background: #ecfdf5;
+            color: #059669;
+            border: 1px solid #a7f3d0;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            outline: none;
+            flex-shrink: 0;
+        }
+        .btn-salin-rek:hover {
+            background: #10b981;
+            color: #ffffff;
+            border-color: #10b981;
+            box-shadow: 0 4px 10px rgba(16, 185, 129, 0.25);
+        }
+        .btn-salin-rek:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div id="globalLoader">
+        <i class="fa-solid fa-bus bus-loader"></i>
+        <p style="margin-top: 15px; font-weight: 700; color: var(--primary-dark);">Memuat Data...</p>
+    </div>
+
+    <div id="alertToast" class="alert-toast">
+        <div id="alertIcon" class="alert-icon success"><i class="fa-solid fa-check"></i></div>
+        <div class="alert-content">
+            <h4 id="alertTitle">Berhasil</h4>
+            <p id="alertMessage">Tindakan selesai.</p>
+        </div>
+    </div>
+
+    <div id="floatingCopyToast">
+        <i class="fa-solid fa-circle-check" style="font-size: 16px;"></i>
+        <span id="floatingCopyToastMsg">Nomor rekening berhasil disalin!</span>
+    </div>
+
+    <div id="subscriptionOverlay" class="subscription-overlay">
+        <div class="subscription-box">
+            <div id="subPendingView" style="display: none;">
+                <i class="fa-solid fa-hourglass-half wait-icon fa-spin-pulse"></i>
+                <h2 id="subPendingTitle">Menunggu Konfirmasi</h2>
+                <p id="subPendingDesc">Sistem kami sedang meninjau struk pembayaran Anda. Harap menunggu hingga Admin memverifikasi pesanan berlangganan Anda. Anda dapat mengecek status secara berkala di menu Riwayat.</p>
+                <button onclick="closeSubscriptionModal()" style="background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px; width: 100%; font-weight: 700; color: var(--text-main); cursor: pointer; margin-top: 10px;">Tutup & Cek Nanti</button>
+                <button id="btnKeluarPending" onclick="executeLogout()" style="background: none; border: none; color: #ef4444; font-weight: 700; font-size: 13px; margin-top: 15px; cursor: pointer; text-decoration: underline; width:100%;">Keluar Akun</button>
+            </div>
+
+            <div id="subPaymentForm">
+                <i class="fa-solid fa-lock warn-icon" id="subModalIcon"></i>
+                <h2 id="subModalTitle">Akses Terkunci</h2>
+                <p id="subModalDesc">Masa aktif trial atau langganan Anda telah habis. Silakan perpanjang akses untuk masuk ke dashboard.</p>
+                <div style="text-align: left; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted);">Pilih Paket Berlangganan</div>
+                <div class="input-group" style="margin-bottom: 15px; z-index: 100;">
+                    <div class="custom-select-trigger" id="paketSelectTrigger" onclick="document.getElementById('paketSelectOptions').classList.toggle('open')" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #fff;">
+                        <span id="selectedPaketText" style="font-weight: 600; font-size: 14px; color: var(--text-main);">Pilih Paket...</span><i class="fa-solid fa-chevron-down"></i>
+                    </div>
+                    <div class="custom-options" id="paketSelectOptions"></div>
+                </div>
+
+                <div style="text-align: left; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: var(--text-muted);">Pengali Durasi Waktu</div>
+                <div class="qty-wrapper">
+                    <button class="qty-btn" onclick="updateSubQty(-1)">-</button>
+                    <div id="subQtyValue" class="qty-val">1x</div>
+                    <button class="qty-btn" onclick="updateSubQty(1)">+</button>
+                </div>
+
+                <div style="text-align: left; margin-bottom: 5px; font-size: 12px; font-weight: 700; color: var(--text-muted);">Total Pembayaran</div>
+                <div id="subTotalPrice" class="total-price">Rp 0</div>
+
+                <button class="btn-pay-animated" onclick="openPaymentProcess()"><i class="fa-solid fa-rocket" style="margin-right: 8px;"></i> Lanjutkan Pembayaran</button>
+                
+                <button id="btnKeluarSub" onclick="executeLogout()" style="background: none; border: none; color: #ef4444; font-weight: 700; font-size: 13px; margin-top: 15px; cursor: pointer; text-decoration: underline; width:100%;">Keluar Akun</button>
+                <button id="btnKembaliSub" onclick="closeSubscriptionModal()" style="background: none; border: none; color: var(--text-muted); font-weight: 700; font-size: 13px; margin-top: 15px; cursor: pointer; text-decoration: underline; width:100%; display:none;">Kembali</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="paymentDrawer" class="drawer-modal" style="z-index: 100000;">
+        <div class="drawer-content" style="background: rgba(248, 250, 252, 0.95); backdrop-filter: blur(10px); padding: 0;">
+            <div class="drawer-handle" style="margin-top: 15px;"></div>
+            <div class="drawer-header" style="padding: 0 20px; margin-bottom: 15px;">
+                <h3 style="font-size: 16px;">Instruksi Pembayaran</h3>
+                <button class="drawer-close" onclick="closePaymentDrawer()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding: 0 20px 20px 20px; overflow-y: auto; max-height: 75vh;">
+                <div id="paymentSummaryBox"></div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-top: 0;">Silakan transfer ke salah satu rekening di bawah ini:</p>
+                
+                <div id="rekeningListContainer" style="display:flex; flex-direction:column; gap:10px; margin-bottom:20px;"></div>
+                
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Upload Bukti Struk Transfer (Wajib)</label>
+                <div class="image-upload-box" onclick="document.getElementById('paymentStrukFile').click()" style="margin-bottom: 20px;">
+                    <i class="fa-solid fa-receipt"></i><p>Pilih Foto Struk</p>
+                    <img id="previewPaymentStruk" class="image-preview" src="" style="display:none; margin-top:10px; border-radius:10px; width:100%; object-fit:contain;">
+                </div>
+                <input type="file" id="paymentStrukFile" accept="image/png, image/jpeg" style="display: none;" onchange="previewStrukImage(event)">
+
+                <button id="btnSubmitRealPayment" class="btn-modern-pay" onclick="submitRealPayment()"><i class="fa-solid fa-file-invoice-dollar"></i> Konfirmasi Pembayaran</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="topUpDrawer" class="drawer-modal" style="z-index: 100000; ">
+        <div class="drawer-content" style="background: rgba(248, 250, 252, 0.98); backdrop-filter: blur(15px); padding: 10px; padding-bottom: 0; height: 100%; max-height: 100vh">
+            <div class="drawer-handle" style="margin-top: 15px;"></div>
+            <div class="drawer-header" style="padding: 0 20px; margin-bottom: 15px;">
+                <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);"><i class="fa-solid fa-wallet" style="color: #10b981; margin-right: 8px;"></i>Top Up Saldo Mitra</h3>
+                <button class="drawer-close" onclick="closeTopUpDrawer()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding: 0 20px 20px 20px; overflow-y: auto; max-height: 100vh;">
+                <div style="background: linear-gradient(135deg, #10b981, #059669); border-radius: 16px; padding: 18px; color: #fff; margin-bottom: 20px; box-shadow: 0 10px 25px rgba(16, 185, 129, 0.25); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <span style="font-size: 11px; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px;">Saldo Aktif Saat Ini</span>
+                        <div id="topUpCurrentBalance" style="font-size: 22px; font-weight: 900; margin-top: 4px;">Rp 0</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.2); width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 20px;">
+                        <i class="fa-solid fa-coins"></i>
+                    </div>
+                </div>
+
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 10px; display: block;">Pilih Nominal Top Up</label>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 15px;">
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(50000)">Rp 50.000</button>
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(100000)">Rp 100.000</button>
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(250000)">Rp 250.000</button>
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(500000)">Rp 500.000</button>
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(1000000)">Rp 1.000.000</button>
+                    <button type="button" class="btn-nominal-opt" onclick="selectTopUpNominal(2000000)">Rp 2.000.000</button>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 6px; display: block;">Atau Masukkan Nominal Lainnya </label>
+                    <input type="number" id="customTopUpNominal" placeholder="0" oninput="handleCustomNominalInput(this)" style="width: 100%; padding: 14px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; font-size: 16px; font-weight: 700; color: var(--text-main); outline: none; background: #fff;">
+                </div>
+
+                <p style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 8px;">Silakan Transfer ke Rekening Resmi:</p>
+                <div id="topUpRekeningContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;"></div>
+
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; display: block;">Upload Bukti Struk Transfer (Wajib)</label>
+                <div class="image-upload-box" onclick="document.getElementById('topUpStrukFile').click()" style="margin-bottom: 20px; background: #fff; border: 2px dashed #cbd5e1;">
+                    <i class="fa-solid fa-receipt" style="color: #10b981;"></i><p style="color: var(--text-main); font-weight: 600;">Pilih Foto Struk Transfer</p>
+                    <img id="previewTopUpStruk" class="image-preview" src="" style="display: none; margin-top: 10px; border-radius: 10px; width: 100%; max-height: 200px; object-fit: contain;">
+                </div>
+                <input type="file" id="topUpStrukFile" accept="image/png, image/jpeg" style="display: none;" onchange="previewTopUpStruk(event)">
+
+                <button id="btnSubmitRealTopUp" class="btn-modern-pay" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);" onclick="submitRealTopUp()"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Kirim Konfirmasi Top Up</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="customConfirmModal" class="custom-confirm-overlay"><div class="custom-confirm-box"><i id="confirmIcon" class="confirm-icon fa-solid fa-circle-exclamation" style="color: #ef4444;"></i><div id="confirmTitle" class="confirm-title">Konfirmasi Hapus</div><div id="confirmMessage" class="confirm-msg">Apakah Anda yakin ingin menghapus data ini?</div><div class="confirm-actions"><button class="confirm-btn btn-cancel-confirm" onclick="closeConfirmModal()">Batal</button><button id="confirmYesBtn" class="confirm-btn btn-danger-confirm" onclick="executeConfirmAction()">Hapus</button></div></div></div>
+    <div id="paymentConfirmModal" class="custom-confirm-overlay" style="width:auto; padding: 20px"><div class="custom-confirm-box" style="width:100%"><i class="confirm-icon fa-solid fa-money-bill-wave" style="color: #10b981; font-size: 60px;"></i><div class="confirm-title">Konfirmasi Pembayaran</div><div class="confirm-msg">Apakah penumpang sudah melakukan pembayaran tiket ini secara penuh?</div><div class="confirm-actions"><button class="confirm-btn btn-cancel-confirm" onclick="closePaymentModal()">Belum</button><button id="btnSudahBayar" class="confirm-btn" style="background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);" onclick="handleSudahBayarClick()">Sudah Bayar</button></div></div></div>
+    <div id="manualBookingPaymentModal" class="custom-confirm-overlay"><div class="custom-confirm-box" style="text-align: left;"><h3 style="margin-top: 0; color: var(--text-main); font-weight: 800; font-size: 18px; text-align: center;">Detail Pesanan</h3><p style="font-size: 13px; color: var(--text-muted); text-align: center; margin-bottom: 20px;">Pilih status pembayaran dan lengkapi nama penumpang tiket ini.</p><div style="margin-bottom: 15px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; display: block;">Nama Penumpang</label><input type="text" id="manualInputNamaPenumpang" placeholder="Masukkan Nama Penumpang..." style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; font-size: 14px; outline: none;"></div><div style="margin-bottom: 15px;"><label style="font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 5px; display: block;">No. HP Penumpang</label><input type="tel" id="manualInputNoHp" placeholder="Masukkan No. HP..." style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; font-family: 'Inter', sans-serif; font-size: 14px; outline: none;"></div><div style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;"><label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s;"><input type="radio" name="manualPaymentStatus" value="Belum Bayar" checked><span style="font-weight: 700; font-size: 14px;">Belum Bayar</span></label><label style="display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid #e2e8f0; border-radius: 12px; cursor: pointer; transition: 0.2s;"><input type="radio" name="manualPaymentStatus" value="Lunas"><span style="font-weight: 700; font-size: 14px;">Lunas</span></label></div><div class="confirm-actions"><button class="confirm-btn btn-cancel-confirm" onclick="closeManualPaymentModal()">Batal</button><button id="btnProcessManualBooking" class="confirm-btn btn-primary" style="background: linear-gradient(135deg, #10b981, #059669); color: white; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);" onclick="executeManualBooking()">Proses Sekarang</button></div></div></div>
+    <div id="manualTicketResultModal" class="drawer-modal"><div class="drawer-content" style="background:#f8fafc;"><div class="drawer-handle"></div><div class="drawer-header" style="margin-bottom: 10px;"><h3 style="font-weight: 800; font-size:16px;"><i class="fa-solid fa-ticket" style="color:var(--primary);"></i> E-Ticket Berhasil Dibuat</h3><button class="drawer-close" onclick="closeManualTicketModal()"><i class="fa-solid fa-xmark"></i></button></div><div id="manualTicketContent" style="padding: 10px 0; overflow-y: auto; overflow-x: hidden;"></div><div style="display: flex; gap: 10px; margin-top: 15px;"><button class="btn-primary" style="flex: 1; background: #fff; color: var(--primary); border: 1px solid var(--primary); box-shadow: none;" onclick="printManualTicket()"><i class="fa-solid fa-print"></i> Cetak Tiket</button><button id="btnShareWa" class="btn-primary" style="flex: 1; background: #25D366; box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);" onclick="shareWhatsAppManualTicket()"><i class="fa-brands fa-whatsapp"></i> Bagikan (WA)</button></div></div></div>
+    <div id="desktopSidebarOverlay" class="desktop-sidebar-overlay" onclick="toggleDesktopSidebar()"></div>
+    <div id="desktopSidebar" class="desktop-sidebar"><div class="sidebar-header"><h3>Menu Mitra</h3><button class="drawer-close" onclick="toggleDesktopSidebar()"><i class="fa-solid fa-xmark"></i></button></div><div class="sidebar-menu"><div class="sidebar-item active" onclick="switchSubViewWeb('layanan')"><i class="fa-solid fa-bus-simple"></i> Layanan Aktif</div><div class="sidebar-item" onclick="switchSubViewWeb('pesanan')"><i class="fa-solid fa-ticket"></i> Manajemen Pesanan</div><div class="sidebar-item" onclick="switchSubViewWeb('riwayat')"><i class="fa-solid fa-clock-rotate-left"></i> Riwayat Pembayaran</div><div class="sidebar-item" onclick="switchSubViewWeb('profil')"><i class="fa-solid fa-user"></i> Profil Perusahaan</div></div></div>
+    
+    <div id="pageLogin" class="page auth-page" style="display: flex;">
+        <div class="auth-header">
+            <h1 style="color: #FF7F50">Tobaba Mitra</h1>
+            <p>Sistem Pengelola Aplikasi Mitra</p>
+        </div>
+        <div class="auth-card">
+            <h2 class="auth-title">Selamat Datang Kembali</h2>
+            <p class="auth-subtitle">Masukkan username dan password anda</p>
+            <div class="auth-input-group">
+                <label class="form-label">Username</label>
+                <input type="text" id="loginUser" placeholder="Masukkan username">
+            </div>
+            <div class="auth-input-group">
+                <label class="form-label">Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="loginPass" placeholder="Masukkan password" style="padding-right: 44px;">
+                    <i class="fa-solid fa-eye-slash icon-right" style="color: #ffffff; cursor: pointer;" onclick="togglePassword(this, 'loginPass')"></i>
+                </div>
+            </div>
+            <div style="text-align: right; margin-top: -8px; margin-bottom: 18px;">
+                <span onclick="openModalLupaPassword()" style="color: #FF7F50; font-size: 13px; font-weight: 600; cursor: pointer;">Lupa Password?</span>
+            </div>
+            <button class="btn-auth" onclick="handleLogin()">Masuk</button>
+            <div class="auth-footer">Belum punya akun? <span onclick="switchPage('pageRegister')">Daftar Disini</span></div>
+        </div>
+    </div>
+
+    <div id="pageRegister" class="page auth-page"><div class="auth-header" style="padding-top: 30px; padding-bottom: 10px;"><h1 style="color: #FF7F50">Registrasi Akun</h1><p>Gabung bersama kami sebagai Mitra Tobaba</p></div><div class="auth-card"><h2 class="auth-title">Buat Akun Baru</h2><p class="auth-subtitle">Lengkapi identitas diri operator resmi Anda</p><div class="auth-input-group"><label class="form-label">Nama Lengkap</label><input type="text" id="regNama" placeholder="Nama lengkap sesuai KTP"></div><div class="auth-input-group"><label class="form-label">Username</label><input type="text" id="regUser" placeholder="Buat username tanpa spasi"></div><div class="auth-input-group"><label class="form-label">Email Address</label><input type="email" id="regEmail" placeholder="nama@domain.com"></div><div class="auth-input-group"><label class="form-label">No. HP Pribadi</label><input type="tel" id="regHp" placeholder="08xxxxxxxxxx"></div><div class="auth-input-group"><label class="form-label">Alamat Lengkap</label><textarea id="regAlamat" placeholder="Alamat rumah tinggal saat ini"></textarea></div><div class="auth-input-group"><label class="form-label">Password</label><div style="position: relative;"><input type="password" id="regPass" placeholder="Min. 8 Karakter" style="padding-right: 44px;"><i class="fa-solid fa-eye-slash icon-right" style="color: #ffffff; cursor: pointer;" onclick="togglePassword(this, 'regPass')"></i></div></div><button class="btn-auth" onclick="handleRegister()">Proses Pendaftaran</button><div class="auth-footer">Sudah terdaftar? <span onclick="switchPage('pageLogin')">Masuk disini</span></div></div></div>
+    
+    <div id="pageOnboarding" class="page auth-page">
+        <div class="auth-header" style="padding-bottom: 10px;">
+            <h1 style="color: #FF7F50">Profil Armada</h1>
+        </div>
+        <div class="auth-card" style="border-radius: 30px; padding-top: 30px;">
+            <h2 class="auth-title">Profil Perusahaan</h2>
+            <p class="auth-subtitle">Kelola informasi legalitas dan identitas armada usaha Anda</p>
+
+            <div class="auth-input-group">
+                <label class="form-label">Nama Perusahaan / PO BUS</label>
+                <input type="text" id="compNama" placeholder="Contoh: PO. Tobaba Trans Wisata">
+            </div>
+
+            <div class="auth-input-group">
+                <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                    <label class="form-label">Deskripsi Singkat</label>
+                    <span id="descCounter" style="font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.7);">0/50</span>
+                </div>
+                <textarea id="compDesc" placeholder="Tulis rute utama / fokus pelayanan Anda" maxlength="50" onkeyup="document.getElementById('descCounter').innerText = this.value.length + '/50'"></textarea>
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Skema Pembayaran</label>
+                <div class="input-group" style="margin-bottom: 0; z-index: 50; position: relative;">
+                    <div class="custom-select-trigger" id="skemaSelectTrigger" onclick="document.getElementById('skemaSelectOptions').classList.toggle('open')" style="border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.08); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        <span id="selectedSkemaText" style="font-weight: 500; font-size: 14px; color: rgba(255, 255, 255, 0.6);">Pilih Skema Pembayaran...</span>
+                        <i class="fa-solid fa-chevron-down" style="color: #fff; font-size: 12px;"></i>
+                    </div>
+                    <div class="custom-options" id="skemaSelectOptions" style="background: #1e293b; color: #fff; border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 12px; margin-top: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); position: absolute; width: 100%; z-index: 100;"></div>
+                </div>
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Nama Bank</label>
+                <div class="input-group" style="margin-bottom: 0; z-index: 45; position: relative;">
+                    <div class="custom-select-trigger" id="bankSelectTrigger" onclick="toggleBankDropdown('register')" style="border: 1px solid rgba(255, 255, 255, 0.2); border-radius: 12px; background: rgba(255, 255, 255, 0.08); padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                        <span id="selectedBankText" style="font-weight: 500; font-size: 14px; color: rgba(255, 255, 255, 0.6);">Pilih Bank...</span>
+                        <i class="fa-solid fa-chevron-down" id="bankDropdownIcon" style="color: #fff; font-size: 12px; transition: transform 0.3s ease;"></i>
+                    </div>
+                    <div class="custom-options bank-dropdown-menu" id="bankSelectOptions">
+                        <div style="padding: 10px; position: sticky; top: 0; background: #1e293b; z-index: 10; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                            <input type="text" id="bankSearchInput" placeholder="Cari bank..." onkeyup="filterBankList('register')" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid rgba(255, 255, 255, 0.2); background: rgba(255, 255, 255, 0.1); color: #fff; font-size: 13px; outline: none;">
+                        </div>
+                        <div id="bankListContainer"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Nomor Rekening</label>
+                <input type="number" id="compNorek" placeholder="Masukkan nomor rekening bank">
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Atas Nama Rekening </label>
+                <input type="text" id="compAtasNama" placeholder="Nama pemilik rekening bank">
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Upload Logo Perusahaan (Kotak)</label>
+                <div class="upload-box-dashed" onclick="document.getElementById('compLogoFile').click()"><i class="fa-regular fa-image"></i> Pilih File Logo</div>
+                <div style="text-align: center;"><img id="previewCompLogo" class="image-preview" src="" style="position: relative; width: 100px; height: 100px; object-fit: cover; border-radius: 12px; margin-top: 12px; display: none;"></div>
+            </div>
+            <input type="file" id="compLogoFile" accept="image/png, image/jpeg" style="display: none;" onchange="handleImageSelection(event, 'previewCompLogo', 1/1)">
+
+            <div class="auth-input-group">
+                <label class="form-label">No. HP Kantor Resmi</label>
+                <input type="tel" id="compHp" placeholder="Nomor telepon operasional kantor">
+            </div>
+
+            <div class="auth-input-group">
+                <label class="form-label">Alamat Kantor Pusat</label>
+                <textarea id="compAlamat" placeholder="Lokasi fisik kantor/loket utama"></textarea>
+            </div>
+
+            <button class="btn-auth" onclick="handleCompanyRegister()" style="margin-top: 10px;">Simpan & Aktifkan Dashboard</button>
+            <button onclick="executeLogout()" style="background: none; border: none; color: #ef4444; font-weight: 700; font-size: 13px; margin-top: 15px; cursor: pointer; text-decoration: underline; width:100%;">Keluar Akun</button>
+        </div>
+    </div>
+
+    <div id="pageMainApp" class="page"><div class="app-header" id="mainAppHeader"><div style="display: flex; align-items: center;"><button class="hamburger-btn" onclick="toggleDesktopSidebar()"><i class="fa-solid fa-bars"></i></button><h2 id="headerProfileTitle" class="profil-mitra-title">Profil Mitra</h2><div class="brand" id="headerBrandGroup"><img id="layananLogo" src="" alt="Logo"><div><h3 id="layananCompName">Travel Name</h3><span>Mitra Terverifikasi</span></div></div></div><div style="display: flex; align-items: center; gap: 10px; margin-left: auto;"><div id="globalHeaderTimer" class="sub-info-container" style="display: none;"><span id="subLabelDesk" style="font-size: 11px; font-weight: 700; color: #64748b;">Masa Aktif:</span><div id="subCountdownText" class="sub-countdown">Menghitung...</div><button class="btn-renew" onclick="showSubscriptionModal(false)">Perpanjang</button></div><div id="headerActionGroup" style="display: flex; gap: 10px; align-items: center;"><div class="search-trigger-mobile" onclick="openLayananSearch()" style="background: #f1f5f9; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-magnifying-glass"></i></div><div class="header-search-web" id="webSearchExpand"><div class="search-icon-trigger" onclick="toggleWebSearch()"><i class="fa-solid fa-magnifying-glass"></i></div><input type="text" id="layananSearchInputWeb" placeholder="Cari armada (merk/tujuan)..." oninput="filterLayananWeb()"><i class="fa-solid fa-xmark search-close-trigger" onclick="toggleWebSearch(true)"></i></div><div style="background: #f1f5f9; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--text-muted); position: relative; cursor: pointer;"><i class="fa-regular fa-bell"></i><div style="position: absolute; top: 8px; right: 8px; width: 8px; height: 8px; background: #ef4444; border-radius: 50%; border: 2px solid #fff;"></div></div></div></div></div><div id="layananSearchOverlay" class="search-overlay"><div style="flex: 1; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; padding: 0 15px;"><i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i><div class="search-input-wrapper"><input type="text" id="layananSearchInput" placeholder="Cari armada (merk/tujuan)..." style="border: none; background: transparent; outline: none; padding: 12px 10px; width: 100%; font-size: 14px;" oninput="toggleClearBtn(this); filterLayananMobile()"><i class="fa-solid fa-xmark clear-btn" onclick="clearSearch('layananSearchInput'); filterLayananMobile();"></i></div></div><button onclick="closeLayananSearch()" style="background:none; border:none; font-weight:700; font-size:14px; color:var(--text-muted); cursor:pointer;">Batal</button></div><div id="subLayanan" class="container" style="padding-bottom: 100px;"><div id="layananCardContainer"></div><button class="fab-btn" onclick="openAddService()"><i class="fa-solid fa-plus"></i></button></div><div id="subPesanan" class="container" style="display: none; padding-bottom: 100px;"><div class="pesanan-header-full" style="position: sticky; top: 0; background: var(--bg-card); backdrop-filter: blur(10px); padding: 16px 20px; z-index: 40; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 10px; margin: -20px -20px 20px -20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);"><button class="hamburger-btn" onclick="toggleDesktopSidebar()" style="margin-right: 5px;"><i class="fa-solid fa-bars"></i></button><div style="flex: 1; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; padding: 0 15px;"><i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i><div class="search-input-wrapper"><input type="text" id="pesananSearchInput" placeholder="Cari tiket, nama..." oninput="toggleClearBtn(this); filterPesananMobile();" style="border: none; background: transparent; outline: none; padding: 12px 10px; width: 100%; font-size: 14px;"><i class="fa-solid fa-xmark clear-btn" onclick="clearSearch('pesananSearchInput')"></i></div></div><button onclick="openScanner()" style="background: linear-gradient(135deg, var(--primary), var(--primary-light)); color: white; border: none; width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; box-shadow: 0 4px 10px rgba(2, 132, 199, 0.3);"><i class="fa-solid fa-qrcode"></i></button></div><div id="pesananCardContainer"></div></div><div id="subRiwayat" class="container" style="display: none; padding-bottom: 100px;"><div class="pesanan-header-full" style="position: sticky; top: 0; background: var(--bg-card); backdrop-filter: blur(10px); padding: 16px 20px; z-index: 40; border-bottom: 1px solid var(--glass-border); display: flex; align-items: center; gap: 10px; margin: -20px -20px 20px -20px; box-shadow: 0 4px 20px rgba(0,0,0,0.03);"><button class="hamburger-btn" onclick="toggleDesktopSidebar()" style="margin-right: 5px;"><i class="fa-solid fa-bars"></i></button><div style="flex: 1; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; padding: 0 15px;"><i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i><div class="search-input-wrapper"><input type="text" id="riwayatSearchInput" placeholder="Cari status, tgl atau bulan..." oninput="toggleClearBtn(this); filterRiwayat();" style="border: none; background: transparent; outline: none; padding: 12px 10px; width: 100%; font-size: 14px;"><i class="fa-solid fa-xmark clear-btn" onclick="clearSearch('riwayatSearchInput')"></i></div></div></div><h3 style="margin: 0 0 16px 0; font-size:16px; font-weight:800; color:#475569;">Riwayat Pembayaran</h3><div id="riwayatCardContainer"></div></div><div id="subProfil" style="display: none; padding-bottom: 100px; position: relative; overflow: hidden;"><div class="profile-bg-decorator"></div><div class="profile-bg-decorator-2"></div><div class="container" style="position: relative; z-index: 10; padding-top: 40px;"><div id="mobileHeaderTimer" class="sub-card-mobile" style="display: none;"><div><div id="subLabelMob" style="font-size: 11px; font-weight: 700; color: #94a3b8; margin-bottom: 4px;">Masa Aktif:</div><div id="mobileSubCountdownText" class="sub-countdown" style="font-size: 14px; color: #34d399;">Menghitung...</div></div><button class="btn-renew" style="padding: 8px 16px; font-size: 12px; border-radius: 8px; box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);" onclick="showSubscriptionModal(false)">Perpanjang</button></div><div class="glass-profile-section"><div class="profile-avatar-wrapper"><div class="profile-avatar-container"><img id="profileLogoImg" src="" alt="Logo"></div></div><div id="profileCompTitle" class="profile-company-name">-</div><div id="pCompDesc" class="profile-company-desc">-</div><div id="profileUserTitle" style="font-size:12px; color:var(--text-muted); margin-top:5px;"></div></div><div class="stat-glass-grid"><div class="stat-glass-card left"><div class="stat-glass-icon-circle"><i class="fa-solid fa-bus"></i></div><div id="stat-total-armada" class="stat-glass-value">0</div><div class="stat-glass-label">Armada</div></div><div class="stat-glass-card center"><div class="stat-glass-icon-circle"><i class="fa-solid fa-spinner fa-spin-pulse"></i></div><div id="stat-pesanan-aktif" class="stat-glass-value">0</div><div class="stat-glass-label">Aktif</div></div><div class="stat-glass-card right"><div class="stat-glass-icon-circle"><i class="fa-solid fa-circle-check"></i></div><div id="stat-pesanan-selesai" class="stat-glass-value">0</div><div class="stat-glass-label">Selesai</div></div></div><div class="setting-glass-group"><div class="setting-glass-item" onclick="openEditPribadi()"><div class="setting-glass-left"><div class="setting-glass-icon"><i class="fa-solid fa-user-gear"></i></div><div class="setting-glass-info"><div class="title">Profil Pribadi</div><div class="sub">Kelola data akun, email & kata sandi</div></div></div><i class="fa-solid fa-chevron-right setting-glass-chevron"></i></div><div class="setting-glass-item" onclick="openEditPerusahaan()"><div class="setting-glass-left"><div class="setting-glass-icon"><i class="fa-solid fa-building-shield"></i></div><div class="setting-glass-info"><div class="title">Profil Perusahaan</div><div class="sub">Ubah logo, legalitas & detail perbankan bisnis</div></div></div><i class="fa-solid fa-chevron-right setting-glass-chevron"></i></div></div><div class="chart-glass-card"><div class="chart-glass-header"><div class="chart-glass-title"><i class="fa-solid fa-chart-line"></i><span>Statistik Pesanan</span></div><div class="chart-filter-tabs"><button id="btn-chart-hari" class="chart-filter-btn active" onclick="updateChartFilter('hari')">Hari</button><button id="btn-chart-bulan" class="chart-filter-btn" onclick="updateChartFilter('bulan')">Bulan</button><button id="btn-chart-tahun" class="chart-filter-btn" onclick="updateChartFilter('tahun')">Tahun</button></div></div><div class="chart-canvas-container"><canvas id="orderAnalyticsChart"></canvas></div></div><button class="btn-logout-glass" onclick="handleLogoutClick()"><i class="fa-solid fa-arrow-right-from-bracket"></i><span>Keluar Akun Partner</span></button></div></div><div class="bottom-nav"><div class="nav-item active" onclick="switchSubView('layanan')"><i class="fa-solid fa-bus-simple"></i>Layanan</div><div class="nav-item" onclick="switchSubView('pesanan')"><i class="fa-solid fa-ticket"></i>Pesanan</div><div class="nav-item" onclick="switchSubView('riwayat')"><i class="fa-solid fa-clock-rotate-left"></i>Riwayat</div><div class="nav-item" onclick="switchSubView('profil')"><i class="fa-solid fa-user"></i>Profil</div></div></div>
+
+    <div id="pageAddService" class="right-side-drawer container" style="padding: 0;"><div style="position: sticky; top: 0; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 50; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; margin: 0;"><div style="display: flex; align-items: center; gap: 15px;"><button onclick="closeAddServiceAndReset()" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button><h2 style="font-size: 18px; margin: 0;">Tambah Armada</h2></div><button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 14px; border-radius: 12px;" onclick="submitNewService()">Simpan</button></div><div class="glass-panel" style="padding: 20px; margin: 20px;"><div class="image-upload-box" onclick="document.getElementById('addFotoFile').click()" style="margin-bottom: 20px;"><i class="fa-solid fa-camera"></i><p>Upload Foto Armada (16:9)</p><img id="previewAddFoto" class="image-preview" src=""></div><input type="file" id="addFotoFile" accept="image/png, image/jpeg" style="display: none;" onchange="handleImageSelection(event, 'previewAddFoto', 16/9)"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Jenis Kendaraan</label><div class="input-group" style="z-index: 30;"><div class="custom-select-trigger" id="serviceTypeSelect" onclick="document.getElementById('serviceTypeOptions').classList.toggle('open')"><span id="selectedServiceType">Pilih Tipe Kendaraan...</span><i class="fa-solid fa-chevron-down"></i></div><div class="custom-options" id="serviceTypeOptions"></div></div><div style="display: flex; gap: 12px;"><div class="input-group" style="flex: 2;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Merk / Nopol</label><input type="text" id="addMerk" placeholder="Cth: Hiace / KT 1234 A" style="padding-left: 16px;"></div><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Kapasitas</label><input type="number" id="addKapasitas" placeholder="Kursi" style="padding-left: 16px;"></div></div><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Fasilitas Armada</label><div class="input-group"><input type="text" id="addFasilitas" placeholder="Pilih Fasilitas" readonly onclick="openFacilitySelection('addFasilitas')" style="padding-left: 16px; cursor: pointer; background: #f8fafc;"><div id="addFasilitasPreviewContainer" class="facility-preview-container"></div></div><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Harga Tiket (Per Kursi)</label><div class="input-group"><span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">Rp</span><input type="number" id="addHarga" placeholder="0" style="padding-left: 48px; font-weight: 700;"></div><div style="height: 1px; background: #e2e8f0; margin: 24px 0;"></div><h3 style="font-size: 15px; margin-bottom: 16px;">Rute & Waktu Tempuh</h3><div style="display: flex; gap: 12px; position: relative;"><div style="position: absolute; left: 8px; top: 25px; bottom: 25px; width: 2px; border-left: 2px dashed #cbd5e1;"></div><div style="flex: 1;"><div class="input-group"><i class="fa-regular fa-circle-dot icon-left" style="color: var(--primary);"></i><input type="text" id="addAsal" placeholder="Kota Asal" readonly onclick="openRegionSelectionNew('addAsal')"></div><div class="input-group"><i class="fa-solid fa-location-dot icon-left" style="color: #ef4444;"></i><input type="text" id="addTujuan" placeholder="Kota Tujuan" readonly onclick="openRegionSelectionNew('addTujuan')"></div></div></div><div style="display: flex; gap: 12px;"><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Berangkat</label><input type="text" id="addJamB" placeholder="00:00" readonly onclick="openTimeSelection('addJamB')" style="padding-left: 16px; text-align: center; font-weight: 700;"></div><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Tiba (Est)</label><input type="text" id="addJamS" placeholder="00:00" readonly onclick="openTimeSelection('addJamS')" style="padding-left: 16px; text-align: center; font-weight: 700;"></div></div><div style="height: 40px;"></div></div></div>
+    <div id="pageEditService" class="right-side-drawer container" style="padding: 0;"><div style="position: sticky; top: 0; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 50; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; margin: 0;"><div style="display: flex; align-items: center; gap: 15px;"><button onclick="closeEditLayananForm()" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button><h2 style="font-size: 18px; margin: 0;">Edit Armada</h2></div><button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 14px; border-radius: 12px; background: linear-gradient(135deg, #10b981, #34d399);" onclick="submitEditService()">Simpan Edit</button></div><div class="glass-panel" style="padding: 20px; margin: 20px;"><div class="image-upload-box" onclick="document.getElementById('editFotoFile').click()" style="margin-bottom: 20px;"><i class="fa-solid fa-camera"></i><p>Ubah Foto Armada (16:9)</p><img id="previewEditFoto" class="image-preview" src="" style="display: none;"></div><input type="file" id="editFotoFile" accept="image/png, image/jpeg" style="display: none;" onchange="handleImageSelection(event, 'previewEditFoto', 16/9)"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Jenis Kendaraan</label><div class="input-group" style="z-index: 30;"><div class="custom-select-trigger" id="serviceEditTypeSelect" onclick="document.getElementById('serviceEditTypeOptions').classList.toggle('open')"><span id="selectedEditServiceType">Pilih Tipe Kendaraan...</span><i class="fa-solid fa-chevron-down"></i></div><div class="custom-options" id="serviceEditTypeOptions"></div></div><div style="display: flex; gap: 12px;"><div class="input-group" style="flex: 2;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Merk / Nopol</label><input type="text" id="editMerk" style="padding-left: 16px;"></div><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Kapasitas</label><input type="number" id="editKapasitas" style="padding-left: 16px;"></div></div><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Fasilitas Armada</label><div class="input-group"><input type="text" id="editFasilitas" readonly onclick="openFacilitySelection('editFasilitas')" style="padding-left: 16px; cursor: pointer; background: #f8fafc;"><div id="editFasilitasPreviewContainer" class="facility-preview-container"></div></div><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Harga Tiket (Per Kursi)</label><div class="input-group"><span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); font-weight: 700; color: var(--text-muted);">Rp</span><input type="number" id="editHarga" style="padding-left: 48px; font-weight: 700;"></div><div style="height: 1px; background: #e2e8f0; margin: 24px 0;"></div><h3 style="font-size: 15px; margin-bottom: 16px;">Rute & Waktu Tempuh</h3><div style="display: flex; gap: 12px; position: relative;"><div style="position: absolute; left: 8px; top: 25px; bottom: 25px; width: 2px; border-left: 2px dashed #cbd5e1;"></div><div style="flex: 1;"><div class="input-group"><i class="fa-regular fa-circle-dot icon-left" style="color: var(--primary);"></i><input type="text" id="editAsal" readonly onclick="openRegionSelectionNew('editAsal')"></div><div class="input-group"><i class="fa-solid fa-location-dot icon-left" style="color: #ef4444;"></i><input type="text" id="editTujuan" readonly onclick="openRegionSelectionNew('editTujuan')"></div></div></div><div style="display: flex; gap: 12px;"><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Berangkat</label><input type="text" id="editJamB" readonly onclick="openTimeSelection('editJamB')" style="padding-left: 16px; text-align: center; font-weight: 700;"></div><div class="input-group" style="flex: 1;"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Tiba (Est)</label><input type="text" id="editJamS" readonly onclick="openTimeSelection('editJamS')" style="padding-left: 16px; text-align: center; font-weight: 700;"></div></div><div style="height: 40px;"></div></div></div>
+    
+    <div id="pageAksesKursi" class="right-side-drawer container" style="padding: 0; background: var(--bg-body);"><div style="position: sticky; top: 0; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 50; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; margin: 0;"><div style="display: flex; align-items: center; gap: 15px;"><button onclick="closeAksesKursi()" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button><h2 style="font-size: 18px; margin: 0;">Manajemen Kursi</h2></div><button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 14px; border-radius: 12px; background: linear-gradient(135deg, #10b981, #059669);" onclick="promptManualBookingPayment()">Simpan Pesanan</button></div><div style="padding: 20px;"><div class="seat-calendar-trigger" onclick="openSeatCalendar()"><div class="info"><div class="icon"><i class="fa-solid fa-calendar-days"></i></div><div class="text"><span>Tanggal Booking</span><b id="displaySeatDate">-</b></div></div><i class="fa-solid fa-chevron-right" style="color: var(--text-muted);"></i></div><div class="seat-legend"><div class="legend-item"><div class="legend-box avail"></div> Tersedia</div><div class="legend-item"><div class="legend-box booked"></div> Terisi (App)</div><div class="legend-item"><div class="legend-box manual"></div> Pesanan Anda</div></div><div class="seat-grid-container"><div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;"><div style="font-size: 16px; font-weight: 800; color: var(--text-main);">Pilih Posisi Kursi</div><div class="steering-wheel" style="margin-bottom: 0; padding-right: 0;"><i class="fa-solid fa-dharmachakra"></i></div></div><div id="seatLoading" style="text-align:center; padding:20px; display:none;"><i class="fa-solid fa-spinner fa-spin fa-2x" style="color:var(--primary);"></i><p style="margin-top:10px; font-weight:600; font-size:12px; color:var(--text-muted);">Memuat kursi...</p></div><div id="seatGridContainer" class="seat-grid"></div></div><div style="height: 60px;"></div></div></div>
+    
+    <div id="modalEditPribadi" class="right-side-drawer container" style="padding: 0;"><div style="position: sticky; top: 0; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 50; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; margin: 0;"><div style="display: flex; align-items: center; gap: 15px;"><button onclick="closeEditPribadi()" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button><h2 style="font-size: 18px; margin: 0;">Edit Profil Pribadi</h2></div><button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 14px; border-radius: 12px;" onclick="submitEditPribadi()">Simpan</button></div><div class="glass-panel" style="padding: 20px; margin: 20px;"><div class="input-group"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nama Lengkap</label><input type="text" id="epNama" style="padding-left: 16px;"></div><div class="input-group"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nomor HP</label><input type="tel" id="epHp" style="padding-left: 16px;"></div><div class="input-group"><label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Alamat</label><textarea id="epAlamat" style="padding-left: 16px; padding-top:16px;"></textarea></div></div></div>
+    
+    <div id="modalEditPerusahaan" class="right-side-drawer container" style="padding: 0;">
+        <div style="position: sticky; top: 0; background: rgba(248, 250, 252, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; z-index: 50; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; margin: 0;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button onclick="closeEditPerusahaan()" style="background: none; border: none; font-size: 20px; color: var(--text-muted); cursor: pointer;"><i class="fa-solid fa-arrow-left"></i></button>
+                <h2 style="font-size: 18px; margin: 0;">Edit Perusahaan</h2>
+            </div>
+            <button class="btn-primary" style="width: auto; padding: 10px 20px; font-size: 14px; border-radius: 12px;" onclick="submitEditPerusahaan()">Simpan</button>
+        </div>
+        <div class="glass-panel" style="padding: 20px; margin: 20px;">
+            <div class="image-upload-box" onclick="document.getElementById('editCompLogoInput').click()" style="margin-bottom: 20px;">
+                <i class="fa-solid fa-camera"></i><p>Ubah Logo Perusahaan (1:1)</p>
+                <div style="text-align: center;">
+                    <img id="previewEditCompLogo" class="image-preview" src="" style="position: relative; width: 100px; height: 100px; object-fit: cover; border-radius: 12px; margin-top: 12px; display: none;">
+                </div>
+            </div>
+            <input type="file" id="editCompLogoInput" accept="image/png, image/jpeg" style="display: none;" onchange="handleImageSelection(event, 'previewEditCompLogo', 1/1)">
+            
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nama Perusahaan</label>
+                <input type="text" id="ecNama" style="padding-left: 16px;">
+            </div>
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nomor HP Kantor</label>
+                <input type="tel" id="ecHp" style="padding-left: 16px;">
+            </div>
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Deskripsi Singkat</label>
+                <textarea id="ecDesc" style="padding-left: 16px; padding-top:16px;"></textarea>
+            </div>
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Alamat Garasi / Kantor</label>
+                <textarea id="ecAlamat" style="padding-left: 16px; padding-top:16px;"></textarea>
+            </div>
+
+            <div style="height: 1px; background: #e2e8f0; margin: 24px 0;"></div>
+            <h3 style="font-size: 15px; margin-bottom: 16px;">Informasi Perbankan</h3>
+            
+            <div class="input-group" style="margin-bottom: 15px; z-index: 45; position: relative;">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nama Bank</label>
+                <div class="custom-select-trigger" id="editBankSelectTrigger" onclick="toggleBankDropdown('edit')" style="border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; padding: 14px 16px; display: flex; justify-content: space-between; align-items: center; cursor: pointer;">
+                    <span id="selectedEditBankText" style="font-weight: 500; font-size: 14px; color: var(--text-muted);">Pilih Bank...</span>
+                    <i class="fa-solid fa-chevron-down" id="editBankDropdownIcon" style="color: var(--text-muted); font-size: 12px; transition: transform 0.3s ease;"></i>
+                </div>
+                <div class="custom-options bank-dropdown-menu" id="editBankSelectOptions" style="background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; margin-top: 6px; box-shadow: 0 10px 25px rgba(0,0,0,0.1);">
+                    <div style="padding: 10px; position: sticky; top: 0; background: #fff; z-index: 10; border-bottom: 1px solid #f1f5f9; border-radius: 12px 12px 0 0;">
+                        <input type="text" id="editBankSearchInput" placeholder="Cari bank..." onkeyup="filterBankList('edit')" style="width: 100%; padding: 8px 12px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; color: var(--text-main); font-size: 13px; outline: none;">
+                    </div>
+                    <div id="editBankListContainer" class="light-bank-list"></div>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Nomor Rekening</label>
+                <input type="number" id="ecNorek" style="padding-left: 16px;" placeholder="Masukkan nomor rekening">
+            </div>
+
+            <div class="input-group">
+                <label style="font-size: 13px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; display: block;">Atas Nama</label>
+                <input type="text" id="ecAtasNama" style="padding-left: 16px;" placeholder="Nama pemilik rekening">
+            </div>
+            
+            <div style="height: 40px;"></div>
+        </div>
+    </div>
+    
+    <div id="regionModal" style="z-index: 999999; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: flex-end; justify-content: center; opacity: 0; transition: opacity 0.3s ease;">
+        <div id="regionModalContent" style="background: #f8fafc; display: flex; flex-direction: column; height: 85vh; width: 100%; max-width: 500px; padding: 0; border-radius: 24px 24px 0 0; transform: translateY(100%); transition: transform 0.3s ease; box-shadow: 0 -10px 40px rgba(0,0,0,0.1);">
+            <div class="drawer-handle" style="margin-top: 15px; width: 40px; height: 5px; background: #cbd5e1; border-radius: 10px; align-self: center;"></div>
+            <div class="drawer-header" style="padding: 15px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <button id="btnBackRegion" onclick="goBackRegion()" style="display:none; background:#f0f9ff; border:none; font-size:16px; color:var(--primary); cursor:pointer; width: 34px; height: 34px; border-radius: 50%;"><i class="fa-solid fa-arrow-left"></i></button>
+                    <h3 id="regionModalTitle" style="margin:0; font-size: 16px; font-weight: 800; color: #1e293b;">Pilih Provinsi</h3>
+                </div>
+                <button class="drawer-close" onclick="closeRegionModalNew()" style="background:none; border:none; font-size:20px; color:#94a3b8; cursor:pointer;"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="regionPath" class="region-breadcrumb" style="display: none; padding: 12px 20px; background: #f8fafc; font-size: 12px; color: var(--primary); font-weight: 700; border-bottom: 1px solid #e2e8f0; overflow-x: auto; white-space: nowrap;"></div>
+            <div class="search-box-modal" id="regionSearchBoxWrapper" style="padding: 15px 20px; background: #fff;">
+                <div style="flex: 1; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; padding: 0 15px; border: 1px solid #e2e8f0;">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #94a3b8;"></i>
+                    <div class="search-input-wrapper" style="width: 100%; display: flex; align-items: center;">
+                        <input type="text" id="regionSearchInputNew" placeholder="Cari wilayah disini..." onkeyup="filterRegionsNew()" style="border: none; background: transparent; outline: none; padding: 12px 10px; width: 100%; font-size: 14px; color: #1e293b; font-weight: 500;">
+                        <i class="fa-solid fa-circle-xmark clear-btn" id="regionClearBtn" style="display:none; cursor:pointer; color: #cbd5e1; font-size: 16px;" onclick="clearSearchNew()"></i>
+                    </div>
+                </div>
+            </div>
+            <div style="flex: 1; overflow-y: auto; padding: 0 20px 20px 20px; background: #fff;">
+                <ul class="modal-list modern-region-list" id="regionListContainerNew" style="list-style: none; padding: 0; margin: 0;"></ul>
+                <div id="regionLoading" style="display:none; text-align:center; padding: 40px 20px;">
+                    <i class="fa-solid fa-compass fa-spin" style="color: #10b981; font-size: 32px; margin-bottom: 15px;"></i>
+                    <p style="font-size: 14px; color: #64748b; font-weight: 600;">Mengambil Data Wilayah...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="scannerModal" class="drawer-modal"><div class="drawer-content"><div class="drawer-header" style="margin-bottom: 10px;"><h3 style="font-size: 16px;">Scan Tiket Barcode/QR</h3><button class="drawer-close" onclick="closeScanner()"><i class="fa-solid fa-xmark"></i></button></div><div class="scanner-container"><div id="reader"></div><div class="scanner-overlay-box"><div class="scanner-focus-area"><div class="corner-1"></div><div class="corner-2"></div><div class="scanner-laser"></div></div></div></div></div></div>
+    <div id="pengaturanModal" class="drawer-modal"><div class="drawer-content" style="background: var(--bg-body); max-height: 100vh; padding: 0;"><div class="drawer-handle" style="margin-top: 15px;"></div><div class="drawer-header" style="padding: 20px 20px 0 20px;"><h3 id="pengaturanModalTitle">Pengaturan Armada</h3><button class="drawer-close" onclick="closePengaturanModal()"><i class="fa-solid fa-xmark"></i></button></div><div style="padding: 20px; overflow-y: auto;"><div class="pengaturan-grid"><div class="grid-action-btn edit" onclick="openEditLayananForm()"><div class="grid-action-icon"><i class="fa-solid fa-pen-to-square"></i></div><span class="grid-action-text">Edit Armada</span></div><div class="grid-action-btn delete" onclick="handleDeleteClick()"><div class="grid-action-icon"><i class="fa-solid fa-trash"></i></div><span class="grid-action-text">Hapus Data</span></div><div class="grid-action-btn seat" onclick="openAksesKursi()"><div class="grid-action-icon"><i class="fa-solid fa-chair"></i></div><span class="grid-action-text">Akses Kursi</span></div></div><h4 style="font-size: 16px; color: var(--text-main); margin-bottom: 12px; font-weight: 800;">Pengaturan Operasional Kerja</h4><div class="glass-panel" style="padding: 12px; margin-bottom: 24px; border-radius: 20px; background: #fff; box-shadow: 0 8px 30px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><button type="button" onclick="changeCalendarMonth(-1)" style="background:#f1f5f9; width:34px; height:34px; border-radius:10px; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></button><b id="calMonthYearTitle" style="color:var(--text-main); font-size:15px;"></b><button type="button" onclick="changeCalendarMonth(1)" style="background:#f1f5f9; width:30px; height:30px; border-radius:10px; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></button></div><div id="calendarGridWidget" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:5px; text-align:center;"></div></div><button class="btn-animated-save" onclick="saveCalendarSettings()"><i class="fa-solid fa-floppy-disk"></i> Simpan Kalender Libur</button></div></div></div>
+    <div id="seatCalendarModal" class="drawer-modal"><div class="drawer-content" style="background: #fff; padding-bottom: 30px;"><div class="drawer-handle"></div><div class="drawer-header"><h3 style="font-size: 16px;">Pilih Tanggal Booking</h3><button class="drawer-close" onclick="closeSeatCalendar()"><i class="fa-solid fa-xmark"></i></button></div><div class="glass-panel" style="padding: 15px; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid #e2e8f0;"><div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;"><button type="button" onclick="changeSeatCalendarMonth(-1)" style="background:#f0f9ff; width:34px; height:34px; border-radius:10px; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-chevron-left"></i></button><b id="seatCalMonthYearTitle" style="color:var(--text-main); font-size:15px; font-weight:800;"></b><button type="button" onclick="changeSeatCalendarMonth(1)" style="background:#f0f9ff; width:34px; height:34px; border-radius:10px; border:none; color:var(--primary); cursor:pointer;"><i class="fa-solid fa-chevron-right"></i></button></div><div id="seatCalendarGrid" style="display:grid; grid-template-columns: repeat(7, 1fr); gap:6px; text-align:center;"></div></div></div></div>
+    <div id="scannedTicketDrawer" class="drawer-modal"><div class="drawer-content" style="background:#f8fafc; padding:0;"><div class="drawer-handle" style="margin-top: 15px;"></div><div class="drawer-header" style="margin-bottom: 10px; padding: 0 20px;"><h3 style="font-weight: 800; font-size:16px;"><i class="fa-solid fa-ticket" style="color:var(--primary);"></i> Detail Pesanan</h3><button class="drawer-close" onclick="closeScannedTicketDrawer()"><i class="fa-solid fa-xmark"></i></button></div><div id="scannedTicketContent"></div></div></div>
+    <div id="timePickerModal" class="drawer-modal"><div class="drawer-content" style="max-height: auto;"><div class="drawer-handle"></div><div class="drawer-header"><h3 id="timeModalTitle">Pilih Waktu</h3><button class="drawer-close" onclick="closeTimeModal()"><i class="fa-solid fa-xmark"></i></button></div><div class="time-picker-wrapper"><div class="time-selector-glass"></div><div class="time-col" id="hourScrollBox" onscroll="handleTimeScroll('hour')"></div><div class="time-separator">:</div><div class="time-col" id="minuteScrollBox" onscroll="handleTimeScroll('minute')"></div></div><button class="btn-primary" onclick="saveSelectedTime()">Terapkan Waktu</button></div></div>
+    <div id="facilityModal" class="drawer-modal"><div class="drawer-content"><div class="drawer-handle"></div><div class="drawer-header"><h3>Pilih Fasilitas</h3><button class="drawer-close" onclick="closeFacilityModal()"><i class="fa-solid fa-xmark"></i></button></div><p style="font-size: 13px; color: var(--text-muted); margin-top: -10px; margin-bottom: 10px;">Pilih fasilitas yang tersedia di armada ini (Bisa pilih banyak).</p><div id="facilityCapsuleContainer" class="facility-capsules-container"></div><button class="btn-primary" style="margin-top: 24px;" onclick="saveSelectedFacilities()">Simpan Fasilitas</button></div></div>
+    <div id="cropperModal" class="drawer-modal"><div class="drawer-content" style="max-height: 90vh;"><div class="drawer-handle"></div><div class="drawer-header"><h3>Sesuaikan Foto</h3><button class="drawer-close" onclick="cancelCrop()"><i class="fa-solid fa-xmark"></i></button></div><div class="cropper-container-wrapper"><img id="cropperImage" src=""></div><div style="display: flex; gap: 12px;"><button class="btn-primary" style="background: #f1f5f9; color: var(--text-main); box-shadow: none;" onclick="cancelCrop()">Batal</button><button class="btn-primary" onclick="applyCrop()">Potong & Simpan</button></div></div></div>
+    <div id="riwayatImageModal" class="drawer-modal">
+        <div class="drawer-content">
+            <div class="drawer-handle"></div>
+            <div class="drawer-header">
+                <h3>Bukti Pembayaran</h3>
+                <button class="drawer-close" onclick="closeRiwayatImageModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <img id="riwayatImgPreview" src="" style="width: 100%; border-radius: 12px; margin-top: 15px; object-fit: contain;">
+        </div>
+    </div>
+
+    <div id="modalLupaPassword" class="drawer-modal" style="z-index: 100000;">
+        <div class="drawer-content" style="background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.15); border-radius: 24px 24px 0 0; color: #fff;">
+            <div class="drawer-handle" style="background: rgba(255, 255, 255, 0.3);"></div>
+            <div class="drawer-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.1); padding-bottom: 15px;">
+                <h3 style="font-size: 16px; font-weight: 800; color: #fff;"><i class="fa-solid fa-key" style="color: #FF7F50; margin-right: 8px;"></i> Lupa Password</h3>
+                <button class="drawer-close" onclick="closeModalLupaPassword()" style="color: rgba(255, 255, 255, 0.7);"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div style="padding: 20px 0 10px 0;">
+                <div id="stepRequestOtp">
+                    <p style="font-size: 13px; color: rgba(255, 255, 255, 0.7); margin-bottom: 15px;">Masukkan email terdaftar Anda. Kode OTP verifikasi akan dikirimkan ke email tersebut.</p>
+                    <div class="auth-input-group" style="margin-bottom: 20px;">
+                        <label class="form-label" style="color: #fff;">Email Address</label>
+                        <input type="email" id="forgotEmail" placeholder="nama@domain.com" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff;">
+                    </div>
+                    <button id="btnSendOtp" class="btn-auth" style="background: linear-gradient(135deg, #FF7F50, #FF5722); box-shadow: 0 4px 15px rgba(255, 127, 80, 0.4);" onclick="handleSendOtp()"><i class="fa-solid fa-paper-plane" style="margin-right: 8px;"></i> Kirim Kode OTP</button>
+                </div>
+
+                <div id="stepResetPassword" style="display: none;">
+                    <p style="font-size: 13px; color: rgba(255, 255, 255, 0.7); margin-bottom: 15px;">Kode OTP telah dikirim. Masukkan kode OTP dan password baru Anda.</p>
+                    <div class="auth-input-group">
+                        <label class="form-label" style="color: #fff;">Kode OTP</label>
+                        <input type="text" id="forgotOtp" placeholder="6 Digit OTP" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; text-align: center; letter-spacing: 4px; font-weight: 700;">
+                    </div>
+                    <div class="auth-input-group" style="margin-bottom: 20px;">
+                        <label class="form-label" style="color: #fff;">Password Baru</label>
+                        <div style="position: relative;">
+                            <input type="password" id="forgotNewPass" placeholder="Minimal 8 karakter" style="background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.2); color: #fff; padding-right: 44px;">
+                            <i class="fa-solid fa-eye-slash icon-right" style="color: #ffffff; cursor: pointer;" onclick="togglePassword(this, 'forgotNewPass')"></i>
+                        </div>
+                    </div>
+                    <button id="btnResetPass" class="btn-auth" style="background: linear-gradient(135deg, #10b981, #059669); box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);" onclick="handleResetPassword()"><i class="fa-solid fa-check-circle" style="margin-right: 8px;"></i> Simpan Password Baru</button>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <span onclick="backToRequestOtp()" style="color: rgba(255, 255, 255, 0.6); font-size: 12px; cursor: pointer; text-decoration: underline;">Kirim Ulang OTP / Ubah Email</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentRegionTargetId = ''; let regionStep = 'provinsi'; let regionDataSelections = { provinsi: {}, kabupaten: {}, kecamatan: {}, kelurahan: {} }; let currentRegionList = [];
+        function openRegionSelectionNew(targetId) { currentRegionTargetId = targetId; regionStep = 'provinsi'; regionDataSelections = { provinsi: {}, kabupaten: {}, kecamatan: {}, kelurahan: {} }; const modal = document.getElementById('regionModal'); const content = document.getElementById('regionModalContent'); modal.style.display = 'flex'; setTimeout(() => { modal.style.opacity = '1'; content.style.transform = 'translateY(0)'; }, 10); loadRegionData('provinsi'); }
+        function closeRegionModalNew() { const modal = document.getElementById('regionModal'); const content = document.getElementById('regionModalContent'); modal.style.opacity = '0'; content.style.transform = 'translateY(100%)'; setTimeout(() => { modal.style.display = 'none'; }, 300); }
+        async function loadRegionData(step, parentId = '') {
+            regionStep = step;
+            const listContainer = document.getElementById('regionListContainerNew'); const loading = document.getElementById('regionLoading'); const title = document.getElementById('regionModalTitle'); const btnBack = document.getElementById('btnBackRegion'); const pathDiv = document.getElementById('regionPath');
+            const searchInput = document.getElementById('regionSearchInputNew'); searchInput.value = ''; document.getElementById('regionClearBtn').style.display = 'none'; listContainer.innerHTML = ''; loading.style.display = 'block'; let url = '';
+            if (step === 'provinsi') { url = 'https://ibnux.github.io/data-indonesia/provinsi.json'; title.innerText = 'Pilih Provinsi'; btnBack.style.display = 'none'; pathDiv.style.display = 'none';
+            } else if (step === 'kabupaten') { url = `https://ibnux.github.io/data-indonesia/kabupaten/${parentId}.json`; title.innerText = 'Pilih Kabupaten/Kota'; btnBack.style.display = 'block'; pathDiv.style.display = 'flex';
+            pathDiv.innerHTML = `${regionDataSelections.provinsi.nama}`; 
+            } else if (step === 'kecamatan') { url = `https://ibnux.github.io/data-indonesia/kecamatan/${parentId}.json`; title.innerText = 'Pilih Kecamatan'; btnBack.style.display = 'block';
+            pathDiv.style.display = 'flex'; pathDiv.innerHTML = `${regionDataSelections.provinsi.nama} <i class="fa-solid fa-angle-right" style="margin:0 5px; font-size:10px;"></i> ${regionDataSelections.kabupaten.nama}`;
+            } else if (step === 'kelurahan') { url = `https://ibnux.github.io/data-indonesia/kelurahan/${parentId}.json`; title.innerText = 'Pilih Desa/Kelurahan'; btnBack.style.display = 'block'; pathDiv.style.display = 'flex';
+            pathDiv.innerHTML = `${regionDataSelections.provinsi.nama} <i class="fa-solid fa-angle-right" style="margin:0 5px; font-size:10px;"></i> ${regionDataSelections.kabupaten.nama} <i class="fa-solid fa-angle-right" style="margin:0 5px; font-size:10px;"></i> ${regionDataSelections.kecamatan.nama}`;
+            }
+            try { const response = await fetch(url);
+            const data = await response.json(); currentRegionList = data; loading.style.display = 'none'; renderRegionListUI(data); } catch (error) { loading.style.display = 'none';
+            listContainer.innerHTML = '<li style="color:#ef4444; justify-content:center; text-align:center; font-weight:700;"><i class="fa-solid fa-triangle-exclamation"></i> Gagal memuat data. Periksa koneksi Anda.</li>';
+            }
+        }
+        function renderRegionListUI(data) {
+            const listContainer = document.getElementById('regionListContainerNew');
+            listContainer.innerHTML = '';
+            if(data.length === 0) { listContainer.innerHTML = '<li style="text-align:center; justify-content:center; color:#94a3b8; font-weight:600;">Data tidak ditemukan.</li>'; return;
+            }
+            data.forEach((item, index) => {
+                const li = document.createElement('li'); li.style.animationDelay = `${index * 0.02}s`;
+                let iconClass = 'fa-map-location-dot'; if(regionStep === 'provinsi') iconClass = 'fa-map'; if(regionStep === 'kabupaten') iconClass = 'fa-city'; if(regionStep === 'kecamatan') iconClass = 'fa-building-flag'; if(regionStep === 'kelurahan') iconClass = 'fa-house-chimney';
+                li.innerHTML = `<div class="loc-icon"><i class="fa-solid ${iconClass}"></i></div><div class="loc-name">${item.nama}</div><div class="loc-arrow"><i class="fa-solid fa-chevron-right"></i></div>`;
+                li.onclick = () => handleRegionSelect(item.id, item.nama); listContainer.appendChild(li);
+            });
+        }
+        function handleRegionSelect(id, nama) {
+            if (regionStep === 'provinsi') { regionDataSelections.provinsi = { id, nama };
+            loadRegionData('kabupaten', id); 
+            } else if (regionStep === 'kabupaten') { regionDataSelections.kabupaten = { id, nama }; loadRegionData('kecamatan', id);
+            } else if (regionStep === 'kecamatan') { regionDataSelections.kecamatan = { id, nama }; loadRegionData('kelurahan', id);
+            } else if (regionStep === 'kelurahan') { regionDataSelections.kelurahan = { id, nama }; const finalResult = `${nama}, ${regionDataSelections.kecamatan.nama}, ${regionDataSelections.kabupaten.nama}, ${regionDataSelections.provinsi.nama}`;
+            const targetInput = document.getElementById(currentRegionTargetId); if(targetInput) { targetInput.value = finalResult; } closeRegionModalNew();
+            }
+        }
+        function goBackRegion() { if (regionStep === 'kelurahan') { loadRegionData('kecamatan', regionDataSelections.kabupaten.id);
+            } else if (regionStep === 'kecamatan') { loadRegionData('kabupaten', regionDataSelections.provinsi.id); } else if (regionStep === 'kabupaten') { loadRegionData('provinsi');
+            } }
+        function filterRegionsNew() { const keyword = document.getElementById('regionSearchInputNew').value.toLowerCase(); const clearBtn = document.getElementById('regionClearBtn');
+            clearBtn.style.display = keyword.length > 0 ? 'block' : 'none'; const filtered = currentRegionList.filter(item => item.nama.toLowerCase().includes(keyword)); renderRegionListUI(filtered);
+        }
+        function clearSearchNew() { const input = document.getElementById('regionSearchInputNew'); input.value = '';
+            document.getElementById('regionClearBtn').style.display = 'none'; renderRegionListUI(currentRegionList); input.focus(); }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/gh/glideaceh/jsbusmitrakreasi/script.js"></script>
+    
+    <script>
+        // VARIABLE & HANDLER NAMA BANK (GITHUB DATABASE JSON)
+        let globalBankList = [];
+        let selectedBankValue = '';
+        let selectedEditBankValue = '';
+
+        async function fetchBankData() {
+            try {
+                const res = await fetch('https://raw.githubusercontent.com/muhamdaily/bank-indonesia/refs/heads/main/bank-indonesia.json');
+                const data = await res.json();
+                globalBankList = data;
+                renderBankList(globalBankList, 'register');
+                renderBankList(globalBankList, 'edit');
+            } catch (e) {
+                console.error("Gagal memuat database bank:", e);
+            }
+        }
+
+        // FUNGSI RENDER LIST BANK DINAMIS UNTUK REGISTER & EDIT
+        function renderBankList(list, type = 'register') {
+            const containerId = type === 'edit' ? 'editBankListContainer' : 'bankListContainer';
+            const container = document.getElementById(containerId);
+            if (!container) return;
+            
+            container.innerHTML = '';
+            if (!list || list.length === 0) {
+                container.innerHTML = '<div style="padding:12px; text-align:center; color:rgba(164,175,188,0.8); font-size:12px;">Bank tidak ditemukan</div>';
+                return;
+            }
+            list.forEach(b => {
+                const bankName = b.name || b.bank_name || b.nama || b.bank || (b.code ? `${b.code} - ${b.name||''}` : 'Bank');
+                const div = document.createElement('div');
+                div.className = 'bank-item-option';
+               
+                div.innerHTML = `<i class="fa-solid fa-building-columns" style="color: #10b981;"></i> <span>${bankName}</span>`;
+                div.onclick = () => {
+                    if (type === 'edit') selectEditBankOption(bankName);
+                    else selectBankOption(bankName);
+                };
+           
+                container.appendChild(div);
+            });
+        }
+
+        // TOGGLE DROPDOWN (DINAMIS UNTUK KEDUANYA)
+        function toggleBankDropdown(type = 'register') {
+            const menuId = type === 'edit' ? 'editBankSelectOptions' : 'bankSelectOptions';
+            const iconId = type === 'edit' ? 'editBankDropdownIcon' : 'bankDropdownIcon';
+            const menu = document.getElementById(menuId);
+            const icon = document.getElementById(iconId);
+            if (menu) {
+                const isOpen = menu.classList.contains('open');
+                if (isOpen) {
+                    menu.classList.remove('open');
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                } else {
+                    menu.classList.add('open');
+                    if (icon) icon.style.transform = 'rotate(180deg)';
+                }
+            }
+        }
+
+        function filterBankList(type = 'register') {
+            const inputId = type === 'edit' ? 'editBankSearchInput' : 'bankSearchInput';
+            const query = (document.getElementById(inputId).value || '').toLowerCase();
+            const filtered = globalBankList.filter(b => {
+                const name = (b.name || b.bank_name || b.nama || b.bank || '').toLowerCase();
+                const code = (b.code || b.kode || '').toLowerCase();
+                return name.includes(query) || code.includes(query);
+            });
+            renderBankList(filtered, type);
+        }
+
+        function selectBankOption(bankName) {
+            selectedBankValue = bankName;
+            const textEl = document.getElementById('selectedBankText');
+            if (textEl) {
+                textEl.innerText = bankName;
+                textEl.style.color = '#ffffff';
+            }
+            toggleBankDropdown('register');
+        }
+
+        function selectEditBankOption(bankName) {
+            selectedEditBankValue = bankName;
+            const textEl = document.getElementById('selectedEditBankText');
+            if (textEl) {
+                textEl.innerText = bankName;
+                textEl.style.color = 'var(--text-main)';
+            }
+            toggleBankDropdown('edit');
+        }
+
+        // TERTUTUP OTOMATIS JIKA KLIK DI LUAR DROPDOWN BANK
+        document.addEventListener('click', function(e) {
+            ['register', 'edit'].forEach(type => {
+                const triggerId = type === 'edit' ? 'editBankSelectTrigger' : 'bankSelectTrigger';
+                const menuId = type === 'edit' ? 'editBankSelectOptions' : 'bankSelectOptions';
+                const iconId = type === 'edit' ? 'editBankDropdownIcon' : 'bankDropdownIcon';
+                const trigger = document.getElementById(triggerId);
+                const menu = document.getElementById(menuId);
+                
+                if (trigger && menu && !trigger.contains(e.target) && !menu.contains(e.target)) {
+                    menu.classList.remove('open');
+                    const icon = document.getElementById(iconId);
+                    if (icon) icon.style.transform = 'rotate(0deg)';
+                }
+            });
+        });
+
+        // FUNGSI NOTIFIKASI MELAYANG MODERN BERANIMASI (FLOATING TOAST)
+        function alertToast(title, message, type = 'success') {
+            const toast = document.getElementById('alertToast');
+            const iconContainer = document.getElementById('alertIcon');
+            const titleEl = document.getElementById('alertTitle');
+            const msgEl = document.getElementById('alertMessage');
+            
+            if (!toast) return;
+
+            if (titleEl) titleEl.innerText = title;
+            if (msgEl) msgEl.innerText = message;
+
+            if (iconContainer) {
+                iconContainer.className = `alert-icon ${type}`;
+                if (type === 'success') {
+                    iconContainer.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
+                } else if (type === 'error') {
+                    iconContainer.innerHTML = '<i class="fa-solid fa-circle-xmark"></i>';
+                } else if (type === 'warning') {
+                    iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+                }
+            }
+
+            toast.classList.add('show');
+            clearTimeout(window.alertToastTimer);
+            window.alertToastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3500);
+        }
+
+        // FUNGSI MODAL LUPA PASSWORD
+        function openModalLupaPassword() {
+            document.getElementById('forgotEmail').value = '';
+            document.getElementById('forgotOtp').value = '';
+            document.getElementById('forgotNewPass').value = '';
+            document.getElementById('stepRequestOtp').style.display = 'block';
+            document.getElementById('stepResetPassword').style.display = 'none';
+            const drawer = document.getElementById('modalLupaPassword');
+            if (drawer) {
+                drawer.style.display = 'flex';
+                setTimeout(() => { drawer.classList.add('open'); drawer.classList.add('active'); }, 10);
+            }
+        }
+
+        function closeModalLupaPassword() {
+            const drawer = document.getElementById('modalLupaPassword');
+            if (drawer) {
+                drawer.classList.remove('open');
+                drawer.classList.remove('active');
+                setTimeout(() => { drawer.style.display = 'none'; }, 300);
+            }
+        }
+
+        function backToRequestOtp() {
+            document.getElementById('stepRequestOtp').style.display = 'block';
+            document.getElementById('stepResetPassword').style.display = 'none';
+        }
+
+        function getActiveScriptUrl() {
+            if (window.globalScriptUrl) return window.globalScriptUrl;
+            if (window.scriptUrl) return window.scriptUrl;
+            if (window.SCRIPT_URL) return window.SCRIPT_URL;
+            try {
+                const cached = localStorage.getItem('cached_script_url');
+                if (cached) return cached;
+            } catch(e) {}
+            return '';
+        }
+
+        // HANDLER KIRIM OTP
+        function handleSendOtp() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            const btn = document.getElementById('btnSendOtp');
+
+            if (!email) {
+                alertToast("Peringatan", "Email terdaftar wajib diisi!", "warning");
+                return;
+            }
+
+            const originalBtnHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Memproses...';
+
+            const url = getActiveScriptUrl();
+            if (!url) {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+                alertToast("Gagal Kirim", "URL Server belum siap. Silakan muat ulang halaman.", "error");
+                return;
+            }
+
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ action: "sendOtp", email: email })
+            })
+            .then(res => res.json())
+            .then(res => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+                if (res.status === 'success') {
+                    alertToast("Berhasil", res.message || "Kode OTP berhasil dikirim ke email Anda!", "success");
+                    document.getElementById('stepRequestOtp').style.display = 'none';
+                    document.getElementById('stepResetPassword').style.display = 'block';
+                } else {
+                    alertToast("Gagal", res.message || "Email tidak ditemukan!", "error");
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+                alertToast("Gagal Error", "Terjadi kesalahan koneksi ke server!", "error");
+            });
+        }
+
+        // HANDLER RESET PASSWORD
+        function handleResetPassword() {
+            const email = document.getElementById('forgotEmail').value.trim();
+            const otp = document.getElementById('forgotOtp').value.trim();
+            const newPassword = document.getElementById('forgotNewPass').value.trim();
+            const btn = document.getElementById('btnResetPass');
+            if (!otp || !newPassword) {
+                alertToast("Peringatan", "Lengkapi kode OTP dan password baru Anda!", "warning");
+                return;
+            }
+
+            const originalBtnHTML = btn.innerHTML;
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin" style="margin-right: 8px;"></i> Menyimpan...';
+
+            const url = getActiveScriptUrl();
+            fetch(url, {
+                method: 'POST',
+                body: JSON.stringify({ action: "resetPassword", email: email, otp: otp, newPassword: newPassword })
+            })
+            .then(res => res.json())
+            .then(res => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+                if (res.status === 'success') {
+                    alertToast("Berhasil", res.message || "Password berhasil diubah, silakan masuk!", "success");
+                    closeModalLupaPassword();
+                } else {
+                    alertToast("Gagal", res.message || "Kode OTP salah atau telah kadaluarsa!", "error");
+                }
+            })
+            .catch(err => {
+                btn.disabled = false;
+                btn.innerHTML = originalBtnHTML;
+                alertToast("Gagal Error", "Gagal memperbarui password!", "error");
+            });
+        }
+
+        // FUNGSI SALIN REKENING
+        function copyRekening(norek) {
+            function triggerToast() {
+                const toast = document.getElementById('floatingCopyToast');
+                const msg = document.getElementById('floatingCopyToastMsg');
+                if (toast && msg) {
+                    msg.innerText = `Nomor rekening ${norek} berhasil disalin!`;
+                    toast.classList.add('show');
+                    clearTimeout(window.copyToastTimer);
+                    window.copyToastTimer = setTimeout(() => {
+                        toast.classList.remove('show');
+                    }, 2500);
+                }
+            }
+
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                navigator.clipboard.writeText(norek).then(triggerToast).catch(() => fallbackCopy(norek));
+            } else {
+                fallbackCopy(norek);
+            }
+
+            function fallbackCopy(text) {
+                const textArea = document.createElement("textarea");
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                try {
+                    document.execCommand('copy');
+                    triggerToast();
+                } catch (err) {}
+                document.body.removeChild(textArea);
+            }
+        }
+
+        (function() {
+            window.globalScriptUrl = '';
+
+            function updateRekeningUI(rekeningList) {
+                if (!rekeningList || rekeningList.length === 0) return;
+                
+                try {
+                    localStorage.setItem('cached_rekening_data', JSON.stringify(rekeningList));
+                } catch(e) {}
+
+                const subContainer = document.getElementById('rekeningListContainer');
+                const topUpContainer = document.getElementById('topUpRekeningContainer');
+                
+                let subRadioName = 'rekeningOption'; 
+                let topUpRadioName = 'rekeningTopupOption'; 
+
+                let selectedSub = null;
+                if (subContainer && subContainer.querySelector('input[type="radio"]')) {
+                    const existingRadio = subContainer.querySelector('input[type="radio"]');
+                    subRadioName = existingRadio.name;
+                    const checked = subContainer.querySelector('input[type="radio"]:checked');
+                    if (checked) selectedSub = checked.value;
+                }
+
+                let selectedTopUp = null;
+                if (topUpContainer && topUpContainer.querySelector('input[type="radio"]')) {
+                    const existingRadio = topUpContainer.querySelector('input[type="radio"]');
+                    topUpRadioName = existingRadio.name;
+                    const checked = topUpContainer.querySelector('input[type="radio"]:checked');
+                    if (checked) selectedTopUp = checked.value;
+                }
+
+                const renderHTML = (list, radioName, selectedVal) => list.map((rek, idx) => {
+                    const val = `${rek.bank}-${rek.norek}`;
+                    const isChecked = selectedVal ? (val === selectedVal) : (idx === 0);
+                    
+                    return `
+                    <div style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border: 1px solid #e2e8f0; border-radius: 12px; background: #fff; margin-bottom: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);">
+                        <input type="radio" name="${radioName}" value="${val}" ${isChecked ? 'checked' : ''} style="display: none;">
+                        <div style="display: flex; align-items: center; gap: 12px; flex: 1; min-width: 0;">
+                            <img src="${rek.logo}" alt="${rek.bank}" style="height: 26px; object-fit: contain; width: 50px; flex-shrink: 0;">
+                            <div style="min-width: 0;">
+                                <div style="font-weight: 800; font-size: 14px; color: var(--text-main); margin-bottom: 2px;">${rek.bank}</div>
+                                <div style="font-size: 12px; color: var(--text-muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${rek.norek} - a.n ${rek.atasNama}</div>
+                            </div>
+                        </div>
+                        <button type="button" class="btn-salin-rek" onclick="copyRekening('${rek.norek}')">
+                            <i class="fa-regular fa-copy"></i> Salin
+                        </button>
+                    </div>`;
+                }).join('');
+
+                if (subContainer) subContainer.innerHTML = renderHTML(rekeningList, subRadioName, selectedSub);
+                if (topUpContainer) topUpContainer.innerHTML = renderHTML(rekeningList, topUpRadioName, selectedTopUp);
+            }
+
+            function loadCachedRekeningImmediately() {
+                try {
+                    const cached = localStorage.getItem('cached_rekening_data');
+                    if (cached) {
+                        const parsed = JSON.parse(cached);
+                        if (Array.isArray(parsed) && parsed.length > 0) {
+                            updateRekeningUI(parsed);
+                        }
+                    }
+                } catch(e) {}
+            }
+
+            // --- TAMBAHAN BARU: Fungsi cache data perusahaan agar kebal refresh ---
+            function loadCachedCompanyData() {
+                try {
+                    const cached = localStorage.getItem('cached_company_data');
+                    if (cached) window.myCompanyData = JSON.parse(cached);
+                } catch(e) {}
+            }
+
+            loadCachedRekeningImmediately();
+            loadCachedCompanyData(); // Jalankan saat boot
+
+            // INTERCEPT FETCH UNTUK MENAMBAHKAN AUTO-MAPPING & MENYIMPAN COMPANY INFO SECARA GLOBAL
+            const originalFetch = window.fetch;
+            window.fetch = async function(...args) {
+                if (args[0] && typeof args[0] === 'string' && args[0].includes('script.google.com/macros/s/')) {
+                    window.globalScriptUrl = args[0];
+                    try { localStorage.setItem('cached_script_url', args[0]); } catch(e){}
+                }
+
+                // MENAMBAHKAN DATA BANK DARI INPUT PERUSAHAAN SAAT SUBMIT KE GAS
+                try {
+                    const reqOptions = args[1];
+                    if (reqOptions && reqOptions.body) {
+                        let bodyObj = JSON.parse(reqOptions.body);
+                        // Action intercept untuk Register (Onboarding) dan Edit Profil Perusahaan
+                        if (bodyObj.action === "registerCompany" || bodyObj.action === "saveCompanyProfile" || bodyObj.action === "updateCompany" || bodyObj.action === "editCompany") {
+                            let isEdit = (bodyObj.action === "editCompany");
+                            // 1. Tangani Data Bank Dropdown
+                            let bankVal = isEdit ? (typeof selectedEditBankValue !== 'undefined' ? selectedEditBankValue : "") : (typeof selectedBankValue !== 'undefined' ? selectedBankValue : "");
+                            bodyObj.namaBank = bankVal || bodyObj.namaBank || "";
+                            bodyObj.bank = bodyObj.namaBank;
+                            // 2. Tangani Input Nomor Rekening & Atas Nama
+                            let norekInputId = isEdit ? 'ecNorek' : 'compNorek';
+                            let atasNamaInputId = isEdit ? 'ecAtasNama' : 'compAtasNama';
+
+                            let norekEl = document.getElementById(norekInputId);
+                            bodyObj.nomorRekening = norekEl ? norekEl.value.trim() : (bodyObj.nomorRekening || "");
+                            bodyObj.norek = bodyObj.nomorRekening;
+
+                            let atasNamaEl = document.getElementById(atasNamaInputId);
+                            bodyObj.atasNama = atasNamaEl ? atasNamaEl.value.trim() : (bodyObj.atasNama || "");
+                            
+                            args[1].body = JSON.stringify(bodyObj);
+
+                            // --- TAMBAHAN BARU: Perbarui data memori lokal langsung saat disimpan ---
+                            if (!window.myCompanyData) window.myCompanyData = {};
+                            window.myCompanyData.namaBank = bodyObj.namaBank;
+                            window.myCompanyData.nomorRekening = bodyObj.nomorRekening;
+                            window.myCompanyData.atasNama = bodyObj.atasNama;
+                            try { localStorage.setItem('cached_company_data', JSON.stringify(window.myCompanyData));
+                            } catch(e) {}
+                        }
+                    }
+                } catch(e) {}
+                
+                const response = await originalFetch.apply(this, args);
+                try {
+                    const reqOptions = args[1];
+                    if (reqOptions && reqOptions.body) {
+                        const bodyObj = JSON.parse(reqOptions.body);
+                        // Menangkap data response dari server untuk disimpan secara global
+                        if (bodyObj.action === "checkExpiry" || bodyObj.action === "login") {
+                            const clone = response.clone();
+                            clone.json().then(data => {
+                                if (data.status === 'success') {
+                                    if(data.rekening) updateRekeningUI(data.rekening);
+                                    if(data.company) { 
+                                        window.myCompanyData = data.company; // Simpan ke global
+                                        try { localStorage.setItem('cached_company_data', JSON.stringify(data.company)); } catch(e) {}
+                                    }
+                                }
+                            }).catch(e => {});
+                        }
+                    }
+                } catch(e) {}
+                
+                return response;
+            };
+
+            setInterval(() => {
+                const url = getActiveScriptUrl();
+                if (url) {
+                    fetch(url, {
+                        method: 'POST',
+                        body: JSON.stringify({ action: 'getRekening' })
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.status === 'success' && data.rekening) {
+                            updateRekeningUI(data.rekening);
+                        }
+                    }).catch(e => {});
+                }
+            }, 15000);
+            const observer = new MutationObserver((mutations) => {
+                mutations.forEach((mutation) => {
+                    if (mutation.target.style.display !== 'none') {
+                        if (mutation.target.id === 'paymentDrawer' || mutation.target.id === 'topUpDrawer') {
+                            loadCachedRekeningImmediately();
+                            const url = getActiveScriptUrl();
+                            if (url) {
+                                fetch(url, { method: 'POST', body: JSON.stringify({ action: 'getRekening' }) })
+                                .then(res => res.json())
+                                .then(data => { if (data.status === 'success' && data.rekening) updateRekeningUI(data.rekening); })
+                                .catch(e => {});
+                            }
+                        }
+                    }
+                });
+            });
+            window.addEventListener('DOMContentLoaded', () => {
+                fetchBankData(); // Fetch database bank dari GitHub
+                loadCachedRekeningImmediately();
+                
+                const pDrawer = document.getElementById('paymentDrawer');
+                const tDrawer = document.getElementById('topUpDrawer');
+                if(pDrawer) observer.observe(pDrawer, { attributes: true, attributeFilter: ['style'] });
+                if(tDrawer) observer.observe(tDrawer, { attributes: true, attributeFilter: ['style'] });
+
+                // OBSERVER KHUSUS UNTUK MODAL EDIT PERUSAHAAN -> SET VALUE DARI GLOBAL OBJECT
+                const editPerusahaanModal = document.getElementById('modalEditPerusahaan');
+                if(editPerusahaanModal) {
+                    const editObserver = new MutationObserver((mutations) => {
+                        mutations.forEach((mutation) => {
+                            if (mutation.attributeName === 'style' || mutation.attributeName === 'class') {
+                                const isVisible = window.getComputedStyle(editPerusahaanModal).display !== 'none';
+                                // Jika modal edit terbuka dan data perusahaaan sudah ada dari fetch interceptor atau cache
+                                if (isVisible && window.myCompanyData) {
+                                    const comp = window.myCompanyData;
+                                    const bankInput = document.getElementById('selectedEditBankText');
+                                    const norekInput = document.getElementById('ecNorek');
+                                    const anInput = document.getElementById('ecAtasNama');
+                                    // Binding input yang baru
+                                    if (comp.namaBank && bankInput) {
+                                        bankInput.innerText = comp.namaBank;
+                                        bankInput.style.color = 'var(--text-main)';
+                                        selectedEditBankValue = comp.namaBank;
+                                    }
+                                    if (comp.nomorRekening && norekInput) {
+                                        norekInput.value = comp.nomorRekening;
+                                    }
+                                    if (comp.atasNama && anInput) {
+                                        anInput.value = comp.atasNama;
+                                    }
+                                }
+                            }
+                        });
+                    });
+                    editObserver.observe(editPerusahaanModal, { attributes: true, attributeFilter: ['style', 'class'] });
+                }
+            });
+        })();
+    </script>
+</body>
+</html>
