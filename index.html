@@ -16,6 +16,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/glideaceh/BusMitra/stylemitra.css">
     <style>
+        /* --- TAMBAHAN SCRIPT ANTI COPY & SELEKSI TEKS --- */
+        body {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        /* Tetap izinkan seleksi teks pada input dan textarea agar form berfungsi normal */
+        input, textarea {
+            -webkit-user-select: auto !important;
+            -moz-user-select: auto !important;
+            -ms-user-select: auto !important;
+            user-select: auto !important;
+        }
+        /* ------------------------------------------------ */
+
         .btn-nominal-opt {
             background: #f8fafc;
             border: 1px solid #cbd5e1;
@@ -391,7 +407,7 @@
         </div>
     </div>
 
-    <div id="topUpDrawer" class="drawer-modal" style="z-index: 100000; ">
+    <div id="topUpDrawer" class="drawer-modal" style="z-index: 100000;">
         <div class="drawer-content" style="background: rgba(248, 250, 252, 0.98); backdrop-filter: blur(15px); padding: 10px; padding-bottom: 0; height: 100%; max-height: 100vh">
             <div class="drawer-handle" style="margin-top: 15px;"></div>
             <div class="drawer-header" style="padding: 0 20px; margin-bottom: 15px;">
@@ -740,8 +756,7 @@
         function renderRegionListUI(data) {
             const listContainer = document.getElementById('regionListContainerNew');
             listContainer.innerHTML = '';
-            if(data.length === 0) { listContainer.innerHTML = '<li style="text-align:center; justify-content:center; color:#94a3b8; font-weight:600;">Data tidak ditemukan.</li>'; return;
-            }
+            if(data.length === 0) { listContainer.innerHTML = '<li style="text-align:center; justify-content:center; color:#94a3b8; font-weight:600;">Data tidak ditemukan.</li>'; return; }
             data.forEach((item, index) => {
                 const li = document.createElement('li'); li.style.animationDelay = `${index * 0.02}s`;
                 let iconClass = 'fa-map-location-dot'; if(regionStep === 'provinsi') iconClass = 'fa-map'; if(regionStep === 'kabupaten') iconClass = 'fa-city'; if(regionStep === 'kecamatan') iconClass = 'fa-building-flag'; if(regionStep === 'kelurahan') iconClass = 'fa-house-chimney';
@@ -1183,8 +1198,7 @@
                             window.myCompanyData.namaBank = bodyObj.namaBank;
                             window.myCompanyData.nomorRekening = bodyObj.nomorRekening;
                             window.myCompanyData.atasNama = bodyObj.atasNama;
-                            try { localStorage.setItem('cached_company_data', JSON.stringify(window.myCompanyData));
-                            } catch(e) {}
+                            try { localStorage.setItem('cached_company_data', JSON.stringify(window.myCompanyData)); } catch(e) {}
                         }
                     }
                 } catch(e) {}
@@ -1228,6 +1242,7 @@
                     }).catch(e => {});
                 }
             }, 15000);
+
             const observer = new MutationObserver((mutations) => {
                 mutations.forEach((mutation) => {
                     if (mutation.target.style.display !== 'none') {
@@ -1244,6 +1259,7 @@
                     }
                 });
             });
+
             window.addEventListener('DOMContentLoaded', () => {
                 fetchBankData(); // Fetch database bank dari GitHub
                 loadCachedRekeningImmediately();
@@ -1287,5 +1303,33 @@
             });
         })();
     </script>
-</body>
+    
+    <script>
+        // Memblokir menu klik kanan
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Memblokir shortcut keyboard developer (F12, Ctrl+U, Ctrl+Shift+I, dll)
+        document.addEventListener('keydown', function(e) {
+            if (
+                e.key === 'F12' || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'i' || e.keyCode === 73)) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'J' || e.key === 'j' || e.keyCode === 74)) || 
+                (e.ctrlKey && e.shiftKey && (e.key === 'C' || e.key === 'c' || e.keyCode === 67)) || 
+                (e.ctrlKey && (e.key === 'U' || e.key === 'u' || e.keyCode === 85)) || 
+                (e.ctrlKey && (e.key === 'S' || e.key === 's' || e.keyCode === 83))
+            ) {
+                e.preventDefault();
+                return false;
+            }
+        });
+
+        // Memblokir seret gambar dan elemen
+        document.addEventListener('dragstart', event => event.preventDefault());
+        
+        // Memblokir fungsi copy, cut, dan paste (manual shortcut maupun drag)
+        document.addEventListener('copy', event => event.preventDefault());
+        document.addEventListener('cut', event => event.preventDefault());
+        document.addEventListener('paste', event => event.preventDefault());
+    </script>
+    </body>
 </html>
